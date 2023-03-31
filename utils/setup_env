@@ -1,1 +1,2 @@
 export PATH=/home/$USER/.cache/rebar3/bin:$PATH
+export ERL_AFLAGS="-enable-feature all"
