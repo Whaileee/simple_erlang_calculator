@@ -54,9 +54,17 @@ service(SessionID, _Env, _Input) ->
                   ["Content-Type: text/html\r\n\r\n", "<html><body>Hello, world</body></html>"]).
 
 request(SessionID, Env, Input) ->
-  %gen_server:call(?MODULE, {handle_request, {Input}}),
-  Response = gen_server:call(?MODULE, {handle_request, {Input}}),
-  mod_esi:deliver(SessionID, ["Content-Type: application/json\r\n\r\n", Response]).
+  io:format("~p", [Env]),
+  Method = proplists:get_value(request_method, Env),
+  case Method of
+    "GET" ->
+      Response = gen_server:call(?MODULE, {handle_request, {Input}}),
+      mod_esi:deliver(SessionID, ["Content-Type: application/json\r\n\r\n", Response]);
+    _ ->
+      Response = jsone:encode(#{<<"error">> => <<"invalid method">>}),
+      mod_esi:deliver(SessionID,
+                      ["Content-Type: application/json \r\n status: 400 Bad Request\r\n\r\n", Response])
+  end.
 
 calculate(A, B, Operator) ->
   Args = {A, B, Operator},
