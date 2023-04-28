@@ -70,16 +70,35 @@ calculate(A, B, Operator) ->
   Args = {A, B, Operator},
   gen_server:call(?MODULE, {calculate, Args}).
 
-handle_calculate({A, B, '+'}) ->
-  A + B;
-handle_calculate({A, B, '-'}) ->
-  A - B;
-handle_calculate({A, B, '*'}) ->
-  A * B;
-handle_calculate({A, B, '/'}) ->
-  A / B.
+handle_calculate({A, B, "add"}) ->
+  integer_to_binary(A + B);
+handle_calculate({A, B, "sub"}) ->
+  integer_to_binary(A - B);
+handle_calculate({A, B, "mult"}) ->
+  integer_to_binary(A * B);
+handle_calculate({A, B, "div"}) ->
+  float_to_binary(A / B).
 
 handle_request(Params) ->
-  io:format("Params: ~p", [Params]),
-  Output = list_to_binary(Params),
-  jsone:encode(#{<<"result">> => Output}).
+  Args = string:split(Params, ",", all),
+  Values = get_values_to_calculate(Args),
+  A = list_to_integer(proplists:get_value(a, Values)),
+  B = list_to_integer(proplists:get_value(b, Values)),
+  Op = proplists:get_value(op, Values),
+  Result = handle_calculate({A, B, Op}),
+  io:format("Values: ~p", [Values]),
+  jsone:encode(#{<<"result">> => Result}).
+
+get_values_to_calculate([]) ->
+  [];
+get_values_to_calculate([H | T]) ->
+  [Key, Value] = string:split(H, "="),
+  Acc = [{list_to_atom(Key), Value}],
+  get_values_to_calculate(T, Acc).
+
+get_values_to_calculate([], Acc) ->
+  Acc;
+get_values_to_calculate([H | T], Acc) ->
+  [Key, Value] = string:split(H, "="),
+  Acc2 = Acc ++ [{list_to_atom(Key), Value}],
+  get_values_to_calculate(T, Acc2).
