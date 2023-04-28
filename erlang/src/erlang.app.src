@@ -5,7 +5,8 @@
   {mod, {erlang_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    inets
    ]},
   {env,[]},
   {modules, []},

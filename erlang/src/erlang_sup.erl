@@ -29,14 +29,13 @@ init([]) ->
     #{strategy => one_for_one,
       intensity => 1,
       period => 1},
-  ChildSpecs = [
-    spec(fun erlang_srv:start_link/0)
-  ],
+  ChildSpecs = [spec(fun erlang_srv:start_link/0)],
   {ok, {SupFlags, ChildSpecs}}.
 
 %% internal functions
 spec(StartF) ->
   spec(StartF, [], permanent).
+
 spec(StartF, Args, Restart) ->
   % no need to check arity, it will be validated by supervisor library
   {M, F, _Arity} = erlang:fun_info_mfa(StartF),
