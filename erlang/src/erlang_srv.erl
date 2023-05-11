@@ -86,7 +86,7 @@ handle_request(Params) ->
   B = list_to_integer(proplists:get_value(b, Values)),
   Op = proplists:get_value(op, Values),
   Result = handle_calculate({A, B, Op}),
-  io:format("Values: ~p", [Values]),
+  io:format("Result: ~p", [Result]),
   jsone:encode(#{<<"result">> => Result}).
 
 get_values_to_calculate([]) ->
