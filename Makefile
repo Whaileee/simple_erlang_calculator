@@ -15,3 +15,9 @@ clean-all:
 	cd erlang && make clean
 	cd ..
 	cd frontend/my-vue-app && rm -rf dist
+
+backend-build:
+	cd erlang && rebar3 compile
+
+backend-tests:
+	cd erlang && rebar3 do eunit, ct
