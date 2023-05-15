@@ -21,6 +21,8 @@ jobs:
       run: rebar3 compile
   test:
     runs-on: ubuntu-22.04
+    container:
+      image: erlang:25.3.2
     needs: build
     steps:
     - name: Run tests
