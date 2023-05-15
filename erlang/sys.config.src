@@ -1,0 +1,8 @@
+[
+  {erlang, 
+   [
+    {port, ${PORT:-8001}},
+    {log_level, ${LOG_LEVEL:-info}},
+    {log_root, "${LOG_ROOT:-/var/log/erlang}"}
+   ]}
+].
