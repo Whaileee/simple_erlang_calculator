@@ -18,7 +18,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Compile
-      run: rebar3 compile
+      run: make backend-build
   test:
     runs-on: ubuntu-22.04
     container:
@@ -26,5 +26,5 @@ jobs:
     needs: build
     steps:
     - name: Run tests
-      run: rebar3 do eunit, ct
+      run: make backend-tests
   
