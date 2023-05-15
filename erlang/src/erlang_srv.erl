@@ -1,5 +1,5 @@
 -module(erlang_srv).
-
+-include_lib("eunit/include/eunit.hrl").
 -behaviour(gen_server).
 
 -export([start_link/0]).
@@ -102,3 +102,14 @@ get_values_to_calculate([H | T], Acc) ->
   [Key, Value] = string:split(H, "="),
   Acc2 = Acc ++ [{list_to_atom(Key), Value}],
   get_values_to_calculate(T, Acc2).
+
+service_test() ->
+  Expected = {esi_data,["Content-Type: text/html\r\n\r\n",
+           "<html><body>Hello, world</body></html>"]},
+  ok = service(self(), {}, {}),
+  Res = receive
+          Msg -> Msg
+        after
+          1000 -> no_res
+        end,
+  ?assertEqual(Expected, Res).
