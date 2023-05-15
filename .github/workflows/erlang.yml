@@ -10,17 +10,19 @@ permissions:
   contents: read
 
 jobs:
-
+  
   build:
-
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-22.04
     container:
       image: erlang:25.3.2
-
     steps:
     - uses: actions/checkout@v3
     - name: Compile
       run: rebar3 compile
+  test:
+    runs-on: ubuntu-22.04
+    needs: build
+    steps:
     - name: Run tests
       run: rebar3 do eunit, ct
+  
